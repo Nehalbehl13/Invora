@@ -10,15 +10,15 @@ describe("Authentication API", () => {
 
     // ✅ Register user
     await request(app).post("/api/v1/register").send({
-      username: "deepanshu",
-      email: "deepanshu@gmail.com",
-      password: "deepanshu@gmail.com",
+      name: "ntm",
+      email: "ntm@gmail.com",
+      password: "ntm@gmail.com",
     });
-
-    // ✅ Log in to get the token
+    
+    //✅ Log in to get the token
     const loginRes = await request(app).post("/api/v1/login").send({
-      email: "deepanshu@gmail.com",
-      password: "deepanshu@gmail.com",
+      email: "ntm@gmail.com",
+      password: "ntm@gmail.com",
     });
 
     console.log("Login Response:", loginRes.body); // Debugging step
@@ -26,7 +26,7 @@ describe("Authentication API", () => {
     token = loginRes.body.token; // ✅ Store token
   });
 
-  test("User should login and return token", async () => {
+  test("User should register and return token", async () => {
     expect(token).toBeDefined(); // ✅ Ensure token is received
   });
 });

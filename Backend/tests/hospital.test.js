@@ -10,16 +10,14 @@ describe("Hospital API", () => {
     await User.deleteMany({});
     await Hospital.deleteMany({});
 
-    // ✅ Register and login user to get token
     await request(app).post("/api/v1/register").send({
-      username: "deepanshu",
-      email: "deepanshu@gmail.com",
-      password: "deepanshu@gmail.com",
-    });
-
+  name: "ntm",
+  email: "ntm@gmail.com",
+  password: "ntm@gmail.com",
+});
     const loginRes = await request(app).post("/api/v1/login").send({
-      email: "deepanshu@gmail.com",
-      password: "deepanshu@gmail.com",
+      email: "ntm@gmail.com",
+      password: "ntm@gmail.com",
     });
 
     token = loginRes.body.token; // ✅ Store token
