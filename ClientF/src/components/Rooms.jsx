@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import RoomEditModal from "./RoomEditModal";
 import "./Rooms.css";
+import axios from "axios";
 
 const Rooms = () => {
   // const [hospitals, setHospitals] = useState([
@@ -183,7 +184,13 @@ const Rooms = () => {
   // ]);
 
   const [hospitals, setHospitals] = useState([]);
-
+  const [showAddForm, setShowAddForm] = useState(false);
+const [newRoom, setNewRoom] = useState({
+  name: "",
+  floor: "",
+  type: "",
+  hospitalName: ""
+});
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -244,6 +251,30 @@ const Rooms = () => {
     setModalType(type);
     setIsModalOpen(true);
   };
+
+  const handleAddRoom = async (e) => {
+    e.preventDefault();
+    console.log(e.data);
+    const token = localStorage.getItem("auth");
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/rooms/add",
+        newRoom,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.success) {
+        alert("Room added!");
+        setShowAddForm(false);
+        setNewRoom({ name: "", floor: "", type: "", hospitalName: "" });
+        // Optionally, refresh room list here
+      } else {
+        alert(res.data.message || "Failed to add room");
+      }
+    } catch (err) {
+      alert("Error adding room");
+    }
+  };
+
 
   // Expand the first hospital by default
   useEffect(() => {

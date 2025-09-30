@@ -83,6 +83,30 @@ const dashboard = async (req, res) => {
   });
 };
 
+// Add Room
+const addRoom = async (req, res) => {
+  try {
+    const { name, floor, type, hospitalName } = req.body;
+    if (!name || !floor || !type || !hospitalName) {
+      return res.status(400).json({ success: false, message: "All fields required" });
+    }
+    // Find hospital by name
+    const hospital = await Hospital.findOne({ hosp_name: hospitalName });
+    if (!hospital) {
+      return res.status(404).json({ success: false, message: "Hospital not found" });
+    }
+    // Create room linked to hospital
+    const room = new Room({ name, floor, type, hospital: hospital._id });
+    await room.save();
+    // Add room to hospital's rooms array
+    hospital.rooms.push(room._id);
+    await hospital.save();
+    res.status(201).json({ success: true, room });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Error adding room", error: err.message });
+  }
+};
+
 const getAllUsers = async (req, res) => {
   let users = await User.find({});
 
@@ -409,4 +433,5 @@ module.exports = {
   getProfile,
   deleteUser,
   editUser,
+  addRoom
 };

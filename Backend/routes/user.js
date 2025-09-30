@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { login, register, dashboard, getAllUsers, getAllHospitals, addHospital, getHospitalById, updateHospital, deleteHospital, getAllRooms, getHospitalsWithID, getRoomsForHospital, getAllBins, addBin, deleteBin, createHospitalWithRooms, getProfile, deleteUser, editUser } = require("../controllers/user");
+const { login, register, dashboard, getAllUsers, getAllHospitals, addHospital, getHospitalById, updateHospital, deleteHospital, getAllRooms, getHospitalsWithID, getRoomsForHospital, getAllBins, addBin, deleteBin, createHospitalWithRooms, getProfile, deleteUser, editUser, addRoom } = require("../controllers/user");
 const authMiddleware = require('../middleware/auth')
 
 router.route("/login").post(login);
@@ -25,5 +25,6 @@ router.post("/with-rooms", authMiddleware, createHospitalWithRooms);
 router.get("/profile", getProfile);
 router.delete('/users/:id', deleteUser);
 router.put('/users/:id', editUser);
+router.post("/rooms/add", authMiddleware, addRoom);
 
 module.exports = router;

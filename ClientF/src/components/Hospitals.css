@@ -8,6 +8,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
+    margin-top: 60px; /* Adjust this value based on your navbar height */
+    position: relative;
+    z-index: 1;
     margin-bottom: 20px;
   }
   
@@ -31,6 +35,13 @@
     border-color: #3498db;
   }
   
+  .add-hospital-btn {
+  margin-left: auto;
+  padding: 8px 16px;
+  font-size: 1rem;
+  z-index: 2;
+}
+
   .hospitals-list {
     display: flex;
     flex-direction: column;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -28,6 +28,17 @@ import "./App.css"
 const isAuthenticated = localStorage.getItem("auth");
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("auth"));
+
+  useEffect(() => {
+    // Listen for changes to localStorage (e.g., after login/logout)
+    const handleStorageChange = () => {
+      setIsAuthenticated(!!localStorage.getItem("auth"));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   return (
     <CartProvider>
     <Router>
@@ -48,7 +59,6 @@ function App() {
           <Route path="logout" element={<Logout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
           <Route path="/shop" element={<Inventory />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />

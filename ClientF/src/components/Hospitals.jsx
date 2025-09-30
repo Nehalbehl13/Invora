@@ -8,7 +8,7 @@ import "./Hospitals.css";
 
 const Hospitals = () => {
   const [hospitals, setHospitals] = useState([]);
-
+  
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
@@ -77,6 +77,8 @@ const Hospitals = () => {
   //     ],
   //   },
   // ]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newHospital, setNewHospital] = useState({ hosp_name: "", address: "", phone: "" });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedHospital, setSelectedHospital] = useState(null);
@@ -103,13 +105,34 @@ const Hospitals = () => {
     setModalType(type);
     setIsModalOpen(true);
   };
+  
+  const handleAddHospital = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("auth");
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/hospitals/add",
+        newHospital,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.success) {
+        setHospitals([...hospitals, { ...res.data.hospital, id: res.data.hospital._id, rooms: [] }]);
+        setShowAddForm(false);
+        setNewHospital({ hosp_name: "", address: "", phone: "" });
+      } else {
+        alert("Failed to add hospital");
+      }
+    } catch (err) {
+      alert("Error adding hospital");
+    }
+  };
 
   // Handle contacting the admin
   const handleContactAdmin = (e) => {
     e.preventDefault();
     console.log("Contacting admin...");
     window.location.href =
-      "mailto:behl.nehal13@gmail.com?subject=Support%20Request&body=Please%20describe%20your%20issue";
+      "mailto:admin@hospital.com?subject=Support%20Request&body=Please%20describe%20your%20issue";
   };
 
   // Handle closing the modal2
@@ -166,8 +189,38 @@ const Hospitals = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+            <button onClick={() => setShowAddForm(true)} className="add-hospital-btn">
+              Add Hospital
+            </button>
           </div>
 
+          {showAddForm && (
+            <form className="add-hospital-form" onSubmit={handleAddHospital}>
+              <input
+                type="text"
+                placeholder="Hospital Name"
+                value={newHospital.hosp_name}
+                onChange={(e) => setNewHospital({ ...newHospital, hosp_name: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Address"
+                value={newHospital.address}
+                onChange={(e) => setNewHospital({ ...newHospital, address: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Phone"
+                value={newHospital.phone}
+                onChange={(e) => setNewHospital({ ...newHospital, phone: e.target.value })}
+              />
+              <button type="submit">Submit</button>
+              <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
+            </form>
+          )}
+          
           <div className="hospitals-list">
             {filteredHospitals.map((hospital) => (
               <div key={hospital.id} className="hospital-card">
